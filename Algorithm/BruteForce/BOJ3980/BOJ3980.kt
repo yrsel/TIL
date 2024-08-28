@@ -1,4 +1,4 @@
-package Algorithm.Bruteforce.BOJ3980
+package Algorithm.BruteForce.BOJ3980
 
 class BOJ3980 {
     private lateinit var infos: Array<IntArray>
