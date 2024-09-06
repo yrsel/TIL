@@ -31,11 +31,11 @@
 
 ### Data Layer Libraries
 
-- DataSource
+- DataStore
   - 로컬 저장소에 간단한 키-값 쌍을 저장할 수 있는 저장소 라이브러리
   - 데이터를 비동기적으로 저장하기 위해 Coroutines,Flow와 함께 작동하며 RxJava도 지원한다.
-  - SharedPreferences를 DataSource로 대체하는 것을 고려할 수 있다.
-  - 자료 : [안드로이드 공식문서 - DataSource](https://developer.android.com/topic/libraries/architecture/datastore)
+  - SharedPreferences를 DataStore로 대체하는 것을 고려할 수 있다.
+  - 자료 : [안드로이드 공식문서 - DataStore](https://developer.android.com/topic/libraries/architecture/datastore)
 - Room
   - 복잡한 SQL문 없이 데이터베이스 쿼리 및 엑세스를 단순화하는 SQLite 데이터베이스에 대한 추상화 계층을 제공한다.
   - Room 데이터베이스를 쉽게 구성하고 데이터베이스 클래스, 데이터 엔티티 및 데이터 엑세스 개체(DAO)를 사용하여 쿼리할 수 있다.
