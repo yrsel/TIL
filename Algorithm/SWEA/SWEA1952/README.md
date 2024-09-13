@@ -1,7 +1,6 @@
 ## SW Expert Academy 1952 [모의 SW 역량테스트] 수영장
 
-문제
-링크 : [[모의 SW 역량테스트] 수영장](https://swexpertacademy.com/main/code/problem/problemDetail.do?contestProbId=AV5PpFQaAQMDFAUq&categoryId=AV5PpFQaAQMDFAUq&categoryType=CODE&problemTitle=%EC%97%AD%EB%9F%89&orderBy=RECOMMEND_COUNT&selectCodeLang=ALL&select-1=&pageSize=10&pageIndex=1)
+문제 링크 : [[모의 SW 역량테스트] 수영장](https://swexpertacademy.com/main/code/problem/problemDetail.do?contestProbId=AV5PpFQaAQMDFAUq&categoryId=AV5PpFQaAQMDFAUq&categoryType=CODE&problemTitle=%EC%97%AD%EB%9F%89&orderBy=RECOMMEND_COUNT&selectCodeLang=ALL&select-1=&pageSize=10&pageIndex=1)
 
 ### 문제 조건
 
