@@ -1,6 +1,7 @@
 # IntelliJ
 out/
 .idea
+*.iml
 
 ### macOS template
 # General
@@ -29,4 +30,3 @@ Icon
 Network Trash Folder
 Temporary Items
 .apdisk
-
