@@ -1,96 +1,96 @@
 package Algorithm.String.BOJ5446
 
-import java.io.StreamTokenizer
+import java.io.BufferedReader
+
+private const val SIZE = 63
+
+private fun Char.ctoi(): Int {
+    return when (this) {
+        in '0'..'9' -> this - '0'
+        in 'a'..'z' -> this - 'a' + 10
+        in 'A'..'Z' -> this - 'A' + 36
+        else -> 62
+    }
+}
 
 class BOJ5446 {
 
-    private data class Node(
-        val alphabet: Char,
-        val children: MutableList<Node> = mutableListOf(),
+    private data class Trie(
+        val status: Array<Trie?> = Array(SIZE) { null },
         var isEnd: Boolean = false,
         var availRemove: Boolean = true
     ) {
 
-        fun isExist(c: Char): Boolean {
-            return this.children.any { it.alphabet == c }
+        fun insert(fileName: String) {
+            var curr = this
+            fileName.forEach {
+                val idx = it.ctoi()
+                curr.status[idx] ?: run { curr.status[idx] = Trie() }
+                curr = curr.status[idx]!!
+            }
+            curr.isEnd = true
         }
 
-        fun getOrAddChild(c: Char): Node {
-            return this.children.firstOrNull { it.alphabet == c }
-                ?: Node(c).also { this.children.add(it) }
+        fun markUnAvailRemove(fileName: String) {
+            var curr = this
+            fileName.forEach {
+                val idx = it.ctoi()
+                val node = curr.status[idx] ?: return
+                node.availRemove = false
+                curr = node
+            }
         }
 
-        fun setEnded() {
-            this.isEnd = true
+        fun availOneTimeDelete(): Boolean {
+            for (element in this.status) {
+                val cur = element ?: continue
+                if (!cur.availRemove) return false
+            }
+            return true
+        }
+
+        fun countByDelete(): Int {
+            var count = 0
+            for (i in status.indices) {
+                val node = status[i] ?: continue
+
+                if (node.availRemove) {
+                    count++
+                } else {
+                    if (node.isEnd) count++
+                    count += node.countByDelete()
+                }
+            }
+            return count
         }
     }
 
-    fun solve() = StreamTokenizer(System.`in`.bufferedReader()).run {
-        val numInput = { nextToken(); nval.toInt() }
-        val strInput = { nextToken(); sval }
-        val sb = StringBuilder()
-        val t = numInput()
-
-        repeat(t) {
-            val trie = hashMapOf<Char, Node>() // 루트 노드
-
-            val removeFileCount = numInput()
-
-            repeat(removeFileCount) {
-                val fileName = strInput()
-                var root = trie.putIfAbsent(fileName[0], Node(fileName[0])) ?: trie[fileName[0]]!!
-                fileName.forEachIndexed { idx, c ->
-                    if (idx != 0) {
-                        root = root.getOrAddChild(c)
-                    }
+    fun solve() = with(System.`in`.bufferedReader()) {
+        println(buildString {
+            val t = nval()
+            repeat(t) {
+                val trie = Trie()
+                val removeFileCount = nval()
+                repeat(removeFileCount) {
+                    trie.insert(readLine())
                 }
-                root.setEnded()
-            }
+                val cantRemoveFileCount = nval()
+                repeat(cantRemoveFileCount) {
+                    trie.markUnAvailRemove(readLine())
+                }
 
-            val cantRemoveFileCount = numInput()
-            for (i in 0..<cantRemoveFileCount) {
-                val fileName = strInput()
-                var curr = trie[fileName[0]] ?: continue
-                curr.availRemove = false
-                fileName.forEachIndexed { index, c ->
-                    if (index != 0) {
-                        if (curr.isExist(c)) {
-                            curr = curr.getOrAddChild(c)
-                            curr.availRemove = false
-                        } else {
-                            return@forEachIndexed
-                        }
-                    }
+                if (trie.availOneTimeDelete()) {
+                    appendLine(1)
+                } else {
+                    appendLine(trie.countByDelete())
                 }
             }
-
-            val flag = trie.values.all { it.availRemove }
-            var cnt = 0
-            if (flag) {
-                cnt = 1
-            } else {
-                for (root in trie) {
-                    val q = ArrayDeque<Node>()
-                    q.addLast(root.value)
-                    while (q.isNotEmpty()) {
-                        val curr = q.removeFirst()
-
-                        if (curr.availRemove) {
-                            cnt++
-                        } else {
-                            if (curr.isEnd) cnt++
-                            if (curr.children.isNotEmpty()) q.addAll(curr.children)
-                        }
-
-                    }
-                }
-            }
-            sb.appendLine(cnt)
-        }
-
-        println(sb.toString())
+        })
     }
 
+    private fun BufferedReader.nval(): Int {
+        return this.readLine().toInt()
+    }
 }
 
 fun main() {
