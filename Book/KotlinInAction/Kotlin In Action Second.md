@@ -14,49 +14,49 @@
     - 오버로딩 가능한 이항 산술 연산자 예시
         - times, div, mod 또는 rem(코틀린 1.1버전부터), plus, minus, ...
     - 컬렉션이나 Map 자료구조 사용할 때 `[]`로 index 또는 key 값을 사용할 수 있는 것도 관례를 활용했기에 가능하다
-    - get, set 관례
-    - in 관례 -> contains 를 확장함수로 구현해서 관례를 활용할 수 있다.
-    - 반복문 in -> iterator의 hasNext, next 호출을 반복해서 구현
-        - iterator() 메소드를 확장함수로 정의해서 사용할 수 있다.
-    - rangeTo 관례 -> .. 으로 범위연산을 할 수 있는 이유도 관례를 사용했기에 가능하다.
-    - data class 주 생성자에 들어 있는 프로퍼티에 대해서 컴파일러가 자동으로 componentN 함수를 만들어준다.
-        - 구조 분해 선언은 각 변수를 초기화하기 위해 componentN 함수를 호출한다.
-        - N은 구조 분해 선언에 있는 변수의 위치, 최대 5개의 원소까지 제공한다.
-    - Map 자료구조를 사용할 때 key, value 상으로 구조분해 하여 순회할 수 있다.
-        - iterator() 관례와 구조분해 관례(Map.Entry에 대한 확장함수 사용)를 사용해서 가능하다.
-    - 위임 프로퍼티 : 객체가 직접 작업을 수행하지 않고 다른 도우미 객체가 그 작업을 처리하게 맡긴다.
-      ```kotlin
-          class Foo {
-              var p : Type by Delegate()
-          }
-      ```
-        - p 프로퍼티는 접근자 로직을 다른 객체에게 위임한다
-        - 위임 관례를 따르는 Delegate 클래스는 getValue, setValue 메소드를 제공해야 한다.
-        - by 키워드는 프로퍼티와 위임 객체를 연결한다.
-    - by lazy() 사용한 프로퍼티 초기화 지연
-        - 객체의 일부분을 초기화하지 않고 남겨뒀다가 실제로 그 부분의 값이 필요한 경우 초기화할 때 쓰이는 패턴
-        - 초기화 과정에서 자원을 많이 사용하거나 객체를 사용할 때마다 꼭 초기화하지 않아도 되는 프로퍼티에 대해 지연 초기화 패턴 사용 가능하다
-      ```kotlin
-         class Person(val name: String) {
-            private var _emails: List<Email>? = null
-            val emails: List<Email>
-                get() {
-                    if(_email == null) {
-                        _emails = loadEmails(this)
-                    }
-                    return _emails!!
-                }           
-         } 
-      ```
-        - _emails 프로퍼티는 값을 저장하고, emails 프로퍼티는 _emails에 대한 읽기 연산만을 제공한다.
-        - 하지만 이러한 지연 초기화 프로퍼티가 많아지면 코드가 복잡해지고 thread safe 하지 않게 된다. -> 위임 프로퍼티를 사용해보자
-      ```kotlin
-        class Person(val name: String) {
-            val emails by lazy { loadEmails(this) }
-        }
-      ```
-        - lazy 함수는 기본적으로 thread safe 하다.
-        - 하지만, 필요에 따라 동기화에 사용할 lock을 lazy 함수에 전달할 수도 있고, 다중스레드 환경에서 사용하지 않을 프로퍼티를 위해 lazy 함수가 동기화 하지 못하게 막을 수도 있다.
+- get, set 관례
+- in 관례 -> contains 를 확장함수로 구현해서 관례를 활용할 수 있다.
+- 반복문 in -> iterator의 hasNext, next 호출을 반복해서 구현
+    - iterator() 메소드를 확장함수로 정의해서 사용할 수 있다.
+- rangeTo 관례 -> .. 으로 범위연산을 할 수 있는 이유도 관례를 사용했기에 가능하다.
+- data class 주 생성자에 들어 있는 프로퍼티에 대해서 컴파일러가 자동으로 componentN 함수를 만들어준다.
+    - 구조 분해 선언은 각 변수를 초기화하기 위해 componentN 함수를 호출한다.
+    - N은 구조 분해 선언에 있는 변수의 위치, 최대 5개의 원소까지 제공한다.
+- Map 자료구조를 사용할 때 key, value 상으로 구조분해 하여 순회할 수 있다.
+    - iterator() 관례와 구조분해 관례(Map.Entry에 대한 확장함수 사용)를 사용해서 가능하다.
+- 위임 프로퍼티 : 객체가 직접 작업을 수행하지 않고 다른 도우미 객체가 그 작업을 처리하게 맡긴다.
+  ```kotlin
+      class Foo {
+          var p : Type by Delegate()
+      }
+  ```
+    - p 프로퍼티는 접근자 로직을 다른 객체에게 위임한다
+    - 위임 관례를 따르는 Delegate 클래스는 getValue, setValue 메소드를 제공해야 한다.
+    - by 키워드는 프로퍼티와 위임 객체를 연결한다.
+- by lazy() 사용한 프로퍼티 초기화 지연
+    - 객체의 일부분을 초기화하지 않고 남겨뒀다가 실제로 그 부분의 값이 필요한 경우 초기화할 때 쓰이는 패턴
+    - 초기화 과정에서 자원을 많이 사용하거나 객체를 사용할 때마다 꼭 초기화하지 않아도 되는 프로퍼티에 대해 지연 초기화 패턴 사용 가능하다
+  ```kotlin
+     class Person(val name: String) {
+        private var _emails: List<Email>? = null
+        val emails: List<Email>
+            get() {
+                if(_email == null) {
+                    _emails = loadEmails(this)
+                }
+                return _emails!!
+            }           
+     } 
+  ```
+    - _emails 프로퍼티는 값을 저장하고, emails 프로퍼티는 _emails에 대한 읽기 연산만을 제공한다.
+    - 하지만 이러한 지연 초기화 프로퍼티가 많아지면 코드가 복잡해지고 thread safe 하지 않게 된다. -> 위임 프로퍼티를 사용해보자
+  ```kotlin
+    class Person(val name: String) {
+        val emails by lazy { loadEmails(this) }
+    }
+  ```
+    - lazy 함수는 기본적으로 thread safe 하다.
+    - 하지만, 필요에 따라 동기화에 사용할 lock을 lazy 함수에 전달할 수도 있고, 다중스레드 환경에서 사용하지 않을 프로퍼티를 위해 lazy 함수가 동기화 하지 못하게 막을 수도 있다.
 
 ---
 
@@ -104,7 +104,7 @@
       ```
 - 자바에서 코틀린 함수 타입 사용
     - 컴파일된 코드 안에서 함수 타입은 일반 인터페이스로 바뀐다 -> 함수 타입 변수는 FunctionN 인터페이스를 구현하는 객체를 저장한다.
-    - FunctionN에서 N은 인자의 개수 ( Function0<R>, Function1<P1,R> , ... )
+    - FunctionN에서 N은 인자의 개수 ( Function0\<R>, Function1<P1,R> , ... )
     - 각 인터페이스에는 invoke 메소드 정의 하나가 들어있다. -> invoke 호출하면 함수를 실행할 수 있다. (invoke 메소드 본문에 람다 본문이 들어간다.)
     ```kotlin
         // 코틀린
