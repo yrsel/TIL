@@ -1,4 +1,4 @@
-package Algorithm.BOJ10164
+package Algorithm.Dp.BOJ10164
 
 class BOJ10164 {
     private lateinit var dp: Array<IntArray>
